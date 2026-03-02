@@ -1,18 +1,30 @@
 <template>
-  <nav style="margin-bottom: 20px;">
-    <router-link to="/">Home</router-link> |
+  <nav class="navbar">
+    <router-link to="/">Home</router-link>
+
+    <router-link to="/about">
+      About
+    </router-link>
+
+    <router-link to="/start-here">
+      Start Here
+    </router-link>
+
+    <router-link to="/advisors">
+      Advisors
+    </router-link>
 
     <router-link v-if="isLoggedIn" to="/create">
       Create Post
-    </router-link> |
+    </router-link>
 
     <router-link v-if="isAdmin" to="/admin">
       Admin
-    </router-link> |
+    </router-link>
 
     <router-link v-if="!isLoggedIn" to="/login">
       Login
-    </router-link> |
+    </router-link>
 
     <router-link v-if="!isLoggedIn" to="/register">
       Register
@@ -31,7 +43,8 @@ import { useRouter } from "vue-router"
 const router = useRouter()
 
 const user = computed(() => {
-  return JSON.parse(localStorage.getItem("user"))
+  const stored = localStorage.getItem("user")
+  return stored ? JSON.parse(stored) : null
 })
 
 const isLoggedIn = computed(() => {
@@ -48,3 +61,16 @@ const logout = () => {
   router.push("/login")
 }
 </script>
+
+<style scoped>
+.navbar {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+button {
+  cursor: pointer;
+}
+</style>

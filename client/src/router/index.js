@@ -7,6 +7,11 @@ const routes = [
     component: () => import('../pages/Home.vue')
   },
   {
+    path: '/about',
+    name: 'About',
+    component: () => import('../pages/About.vue')
+  },
+  {
     path: '/login',
     name: 'Login',
     component: () => import('../pages/Login.vue')
@@ -35,7 +40,22 @@ const routes = [
     path: '/admin',
     name: 'AdminDashboard',
     component: () => import('../pages/AdminDashboard.vue')
-  }
+  },
+  {
+    path: '/start-here',
+    name: 'StartHere',
+    component: () => import('../pages/StartHere.vue')
+  },
+  {
+    path: '/advisors',
+    name: 'Advisors',
+    component: () => import('../pages/Advisors.vue')
+  },
+  {
+    path: '/advisors/:slug',
+    name: 'AdvisorProfile',
+    component: () => import('../pages/AdvisorProfile.vue')
+  },
 ]
 
 const router = createRouter({
