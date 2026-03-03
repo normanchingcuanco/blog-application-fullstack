@@ -45,7 +45,7 @@ const loginUser = async () => {
     localStorage.setItem("token", res.data.token)
     localStorage.setItem("user", JSON.stringify(res.data.user))
 
-    router.push("/")
+    window.location.href = "/"
   } catch (err) {
     console.error("Login error:", err)
   }

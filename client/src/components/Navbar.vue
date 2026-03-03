@@ -46,26 +46,30 @@
 </template>
 
 <script setup>
-import { computed } from "vue"
+import { ref, onMounted } from "vue"
 import { useRouter } from "vue-router"
 
 const router = useRouter()
 
-const user = computed(() =>
-  JSON.parse(localStorage.getItem("user"))
-)
+const isLoggedIn = ref(false)
+const isAdmin = ref(false)
 
-const isLoggedIn = computed(() =>
-  !!localStorage.getItem("token")
-)
+const syncAuthState = () => {
+  const token = localStorage.getItem("token")
+  const user = JSON.parse(localStorage.getItem("user"))
 
-const isAdmin = computed(() =>
-  user.value?.isAdmin
-)
+  isLoggedIn.value = !!token
+  isAdmin.value = user?.isAdmin || false
+}
+
+onMounted(() => {
+  syncAuthState()
+})
 
 const logout = () => {
   localStorage.removeItem("token")
   localStorage.removeItem("user")
+  syncAuthState()
   router.push("/login")
 }
 </script>
