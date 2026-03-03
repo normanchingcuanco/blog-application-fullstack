@@ -9,19 +9,39 @@
 
       <!-- META -->
       <div class="post-meta">
-        <span>
-          By {{ post.author?.username }}
-        </span>
 
-        <span v-if="post.advisor">
-          • Advisor:
-          <router-link
-            :to="`/advisors/${post.advisor.slug}`"
-            class="advisor-link"
-          >
-            {{ post.advisor.name }}
-          </router-link>
-        </span>
+        <!-- If advisor exists -->
+        <div v-if="post.advisor && post.advisor.name" class="author-wrapper">
+
+          <img
+            v-if="post.advisor.avatarUrl"
+            :src="post.advisor.avatarUrl"
+            :alt="post.advisor.name"
+            class="author-avatar"
+          />
+
+          <div class="author-text">
+            <span class="by-label">By</span>
+            <router-link
+              :to="`/advisors/${post.advisor.slug}`"
+              class="advisor-link"
+            >
+              {{ post.advisor.name }}
+            </router-link>
+          </div>
+
+        </div>
+
+        <!-- Fallback to normal author -->
+        <div v-else class="author-wrapper">
+          <span>By {{ post.author?.username }}</span>
+        </div>
+
+        <!-- OPTIONAL: Show views count -->
+        <div class="views-count" v-if="post.views !== undefined">
+          • {{ post.views }} views
+        </div>
+
       </div>
 
       <!-- CONTENT -->
@@ -52,10 +72,7 @@ import CommentSection from "../components/CommentSection.vue"
 const route = useRoute()
 const post = ref(null)
 
-/* Format content:
-   - Auto link URLs
-   - Preserve line breaks
-*/
+/* Format content */
 const formattedContent = computed(() => {
   if (!post.value?.content) return ""
 
@@ -68,8 +85,19 @@ const formattedContent = computed(() => {
 
 onMounted(async () => {
   try {
+    // 1️⃣ Load post normally
     const res = await API.get(`/posts/${route.params.id}`)
     post.value = res.data
+
+    // 2️⃣ Increment views in background (no await blocking UI)
+    API.put(`/posts/${route.params.id}/view`)
+      .then(updated => {
+        post.value.views = updated.data.views
+      })
+      .catch(() => {
+        // Silent fail – analytics should never break UI
+      })
+
   } catch (err) {
     console.error("Error loading post:", err)
   }
@@ -84,25 +112,60 @@ onMounted(async () => {
 }
 
 .post-container {
-  max-width: 800px; /* slightly wider */
+  max-width: 800px;
   margin: 0 auto;
 }
 
 .post-title {
   font-size: 2.8rem;
-  margin-bottom: 25px;
+  margin-bottom: 30px;
   line-height: 1.2;
   font-family: 'Playfair Display', serif;
 }
 
 .post-meta {
-  color: var(--gray);
   margin-bottom: 50px;
-  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.author-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.author-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center top;
+  border: 1px solid #eee;
+}
+
+.author-text {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.95rem;
+  color: var(--gray);
+}
+
+.by-label {
+  color: var(--gray);
 }
 
 .advisor-link {
   color: var(--terracotta);
+  font-weight: 500;
+}
+
+.views-count {
+  font-size: 0.9rem;
+  color: var(--gray);
 }
 
 .post-content {

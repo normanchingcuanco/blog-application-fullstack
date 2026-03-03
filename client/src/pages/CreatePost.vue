@@ -61,11 +61,18 @@ onMounted(async () => {
 
 const submitPost = async () => {
   try {
+    console.log("Publishing with advisor:", selectedAdvisor.value)
+
     const res = await API.post("/posts", {
       title: title.value,
       content: content.value,
       advisor: selectedAdvisor.value || null
     })
+
+    // Reset form state after successful publish
+    title.value = ""
+    content.value = ""
+    selectedAdvisor.value = ""
 
     router.push(`/posts/${res.data._id}`)
   } catch (err) {

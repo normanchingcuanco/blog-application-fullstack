@@ -66,7 +66,7 @@
 | Advisor Profile Editing (Admin Panel)     | Dedicated admin edit interface allowing modification of advisor name, slug, bio, specialties, avatar, and professional links without database manipulation tools.                                                                         | ✅ Implemented                           |
 | Advisor-Post Association                  | Optional advisor linkage during article creation, allowing posts to be associated with a specific transition advisor and automatically displayed on that advisor’s profile page.                                                         | ✅ Implemented                           |
 | Advisor Thumbnail Optimization            | Face-centered circular thumbnail cropping using object-fit and object-position to ensure professional and visually consistent advisor portrait presentation across the platform.                                                         | ✅ Implemented                           |
-| Advisor Application Confirmation State    | Post-submission success state replacing the advisor registration form, including a simulated professional confirmation email preview to enhance platform credibility and user experience.                                               | ✅ Implemented                           |
+| Advisor Application Confirmation State    | Post-submission success state replacing the advisor registration form, including a simulated professional confirmation email preview to enhance platform credibility and user experience.                                               | ✅ Implemented                         |
 
 
 ## 4. Other requirements
