@@ -50,7 +50,6 @@
 - Admin allowed to delete any posts.
 - Admin is allowed to remove any comments.
 
-## Newly Created Features (RESET Platform Extensions)
 
 ### Newly Created Features (RESET Platform Extensions)
 
