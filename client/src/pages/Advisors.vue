@@ -36,6 +36,19 @@
         </div>
       </div>
 
+      <!-- ✅ NEW CTA SECTION (Added Only) -->
+      <div class="advisor-cta">
+        <h2>Become a Transition Advisor</h2>
+        <p>
+          Have you successfully transitioned into tech and want to guide others?
+          Share your journey and help career shifters navigate their path.
+        </p>
+
+        <router-link to="/advisor-register" class="btn-primary">
+          Apply Now
+        </router-link>
+      </div>
+
     </div>
   </section>
 </template>
@@ -96,12 +109,20 @@ onMounted(async () => {
   border-color: var(--terracotta);
 }
 
-.advisor-avatar img {
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 50%;
+.advisor-avatar {
+  width: 100px;
+  height: 100px;
   margin-bottom: 20px;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.advisor-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top; /* 🔥 This keeps the face centered */
+  display: block;
 }
 
 .advisor-title {
@@ -119,5 +140,24 @@ onMounted(async () => {
 .read-more {
   color: var(--terracotta);
   font-weight: 500;
+}
+
+/* ✅ CTA Styling */
+.advisor-cta {
+  margin-top: 100px;
+  padding: 60px 30px;
+  text-align: center;
+  background-color: var(--white);
+  border: 1px solid #eee;
+}
+
+.advisor-cta h2 {
+  margin-bottom: 20px;
+}
+
+.advisor-cta p {
+  max-width: 600px;
+  margin: 0 auto 30px auto;
+  color: var(--gray);
 }
 </style>

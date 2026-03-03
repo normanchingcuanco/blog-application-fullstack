@@ -50,9 +50,15 @@ exports.createAdvisor = async (req, res) => {
 */
 exports.getAllAdvisors = async (req, res) => {
   try {
-    const advisors = await Advisor.find({ isActive: true }).sort({ name: 1 });
+    const isAdminView = req.query.admin === "true";
+
+    const advisors = isAdminView
+      ? await Advisor.find().sort({ createdAt: -1 })
+      : await Advisor.find({ isActive: true }).sort({ name: 1 });
+
     res.json(advisors);
   } catch (error) {
+    console.error("Get Advisors Error:", error);
     res.status(500).json({ message: "Server error." });
   }
 };
@@ -80,16 +86,32 @@ exports.getAdvisorBySlug = async (req, res) => {
 */
 exports.updateAdvisor = async (req, res) => {
   try {
-    const updated = await Advisor.findByIdAndUpdate(req.params.id, req.body, {
-      new: true
-    });
+    const advisor = await Advisor.findById(req.params.id);
 
-    if (!updated) {
+    if (!advisor) {
       return res.status(404).json({ message: "Advisor not found." });
     }
 
+    // Only update allowed fields
+    advisor.name = req.body.name ?? advisor.name;
+    advisor.slug = req.body.slug ?? advisor.slug;
+    advisor.title = req.body.title ?? advisor.title;
+    advisor.bio = req.body.bio ?? advisor.bio;
+    advisor.specialties = req.body.specialties ?? advisor.specialties;
+    advisor.avatarUrl = req.body.avatarUrl ?? advisor.avatarUrl;
+    advisor.linkedinUrl = req.body.linkedinUrl ?? advisor.linkedinUrl;
+    advisor.websiteUrl = req.body.websiteUrl ?? advisor.websiteUrl;
+
+    // 🔥 Important: allow toggling active status
+    if (typeof req.body.isActive === "boolean") {
+      advisor.isActive = req.body.isActive;
+    }
+
+    const updated = await advisor.save();
+
     res.json(updated);
   } catch (error) {
+    console.error("Update Advisor Error:", error);
     res.status(500).json({ message: "Server error." });
   }
 };
@@ -137,6 +159,61 @@ exports.getAdvisorPosts = async (req, res) => {
     res.json(posts);
   } catch (error) {
     console.error("Get Advisor Posts Error:", error);
+    res.status(500).json({ message: "Server error." });
+  }
+};
+
+/* ================= APPLY AS ADVISOR (PUBLIC) =================
+   POST /api/advisors/apply
+*/
+exports.applyAdvisor = async (req, res) => {
+  try {
+    const {
+      name,
+      slug,
+      title,
+      bio,
+      specialties,
+      avatarUrl,
+      linkedinUrl,
+      websiteUrl
+    } = req.body;
+
+    if (!name || !slug) {
+      return res.status(400).json({
+        message: "Name and slug are required."
+      });
+    }
+
+    const existing = await Advisor.findOne({
+      slug: slug.toLowerCase().trim()
+    });
+
+    if (existing) {
+      return res.status(400).json({
+        message: "Slug already exists."
+      });
+    }
+
+    const advisor = await Advisor.create({
+      name: name.trim(),
+      slug: slug.toLowerCase().trim(),
+      title: title || "",
+      bio: bio || "",
+      specialties: Array.isArray(specialties) ? specialties : [],
+      avatarUrl: avatarUrl || "",
+      linkedinUrl: linkedinUrl || "",
+      websiteUrl: websiteUrl || "",
+      isActive: false // IMPORTANT: not public until approved
+    });
+
+    res.status(201).json({
+      message: "Application submitted successfully.",
+      advisor
+    });
+
+  } catch (error) {
+    console.error("Apply Advisor Error:", error);
     res.status(500).json({ message: "Server error." });
   }
 };

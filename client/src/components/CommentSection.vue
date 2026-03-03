@@ -3,12 +3,12 @@
     <h3>Comments</h3>
 
     <form @submit.prevent="handleSubmit">
-      <input
+      <textarea
         v-model="content"
-        type="text"
+        class="comment-input"
         placeholder="Write a comment..."
         required
-      />
+      ></textarea>
       <button type="submit">Comment</button>
     </form>
 
@@ -83,3 +83,14 @@ onMounted(() => {
   fetchComments()
 })
 </script>
+
+<style scoped>
+.comment-input {
+  width: 100%;
+  min-height: 120px;
+  padding: 12px;
+  font-size: 1rem;
+  resize: vertical;
+  box-sizing: border-box;
+}
+</style>

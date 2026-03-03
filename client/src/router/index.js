@@ -43,6 +43,11 @@ const routes = [
     component: () => import("../pages/AdminDashboard.vue")
   },
   {
+    path: "/admin/advisors/edit/:id",
+    name: "AdminEditAdvisor",
+    component: () => import("../pages/AdminEditAdvisor.vue")
+  },
+  {
     path: "/start-here",
     name: "StartHere",
     component: () => import("../pages/StartHere.vue")
@@ -56,6 +61,13 @@ const routes = [
     path: "/advisors/:slug",
     name: "AdvisorProfile",
     component: () => import("../pages/AdvisorProfile.vue")
+  },
+
+  // ✅ NEW: Advisor Registration / Application Page
+  {
+    path: "/advisor-register",
+    name: "AdvisorRegister",
+    component: () => import("../pages/AdvisorRegister.vue")
   }
 ]
 
